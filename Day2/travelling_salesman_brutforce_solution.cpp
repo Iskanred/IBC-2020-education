@@ -3,15 +3,13 @@
 #include <climits>
 using namespace std;
 
-/* BRUTE FORCE */
-/*
-  6 0
-0   25   37   19   20    7
-25   0   31   17    6   15
-37  31    0   44   35   13
-19  17   44    0   34   14
-20   6   35   34    0   31
-7   31   13   14   31    0
+/* There are N towns. Travelling salesman need to start from town 'start', visit all towns and come back to 'start'
+ * We need to find the optimal(shortest) path from town 'start' to town 'start' through all the remaining towns
+ * 
+ * Number of towns: from 0 to N - 1
+ * 
+ * Input: N, start, matrix of distances between towns
+ * Output: minimal distance, optinal path
  */
 
 void input_dists(int size, int** dists) {
@@ -23,37 +21,46 @@ void input_dists(int size, int** dists) {
     }
 }
 
+/**
+ * return a pair: -first- is min distance, -second- is path with min distance
+ */
 pair<int, int*> get_min_dist(int size, int** const dists, int start) {
     int lengthOfPath = size + 1;
     int minDist = INT_MAX;
-    int* minDistOrderInPath = new int[lengthOfPath]{};
-    int* orderInPath = new int[lengthOfPath]{};
-
-    for (int i = 0; i < lengthOfPath - 1; ++i) {
-        orderInPath[i] = i; // indices correspond values
-    }
-
-    swap(orderInPath[0], orderInPath[start]);
-    orderInPath[lengthOfPath - 1] = start; // the last vertex is the start vertex
+    int* minDistPath = new int[lengthOfPath]{};
+    int* currentPath = new int[lengthOfPath]{};
+    
+    currentPath[0] = start; // the first vertex is the start vertex
+    currentPath[lengthOfPath - 1] = start; // the last vertex is the start vertex
+    
+    // Filling array 'currentOrderInPath' by some sorted permutation (perm only of elems with indices: from 1 to lengthOfPath - 1)
+    // It must be sorted to get all perms by next_perm func from STL, f.e. {2, (0, 1, 3, 4,) 2} where '2' is start point
+    for (int i = 1; i < lengthOfPath - 1; ++i) {
+        if (i <= start)
+            currentPath[i] = i - 1;
+        else
+            currentPath[i] = i; 
+     }
+     
 
     do {
         int currentDist = 0;
 
+         // 'lengthOfPath- 1' cause of ( number of roads(dists) == number of towns(length of path) - 1 )
         for (int i = 0; i < lengthOfPath - 1; ++i) {
-            currentDist += dists[orderInPath[i]][orderInPath[i + 1]];
+            currentDist += dists[currentPath[i]][currentPath[i + 1]]; // distance beetwen [i]-town and [i+1]-town
         }
 
-        if (currentDist < minDist)
+        if (currentDist < minDist) 
         {
             minDist = currentDist;
-            for (int i = 0; i < lengthOfPath; ++i) {
-                minDistOrderInPath[i] = orderInPath[i];
-            }
+            for (int i = 0; i < lengthOfPath; ++i)
+                minDistPath[i] = currentPath[i];
         }
 
-    } while (next_permutation(orderInPath + 1, orderInPath + lengthOfPath - 1));
+    } while (next_permutation(currentPath + 1, currentPath + lengthOfPath - 1));
 
-    return {minDist, minDistOrderInPath};
+    return {minDist, minDistPath};
 }
 
 int main()
@@ -66,12 +73,12 @@ int main()
     int minDist = minDistAns.first;
     int* minDistPath = minDistAns.second;
 
-    cout << endl << minDist << endl;
-    for (int i = 0; i < N + 1; ++i) {
+    cout << endl << "Minimal Distance: " << minDist << endl << "Shortest path: ";
+    for (int i = 0; i < N + 1; ++i) 
+    {
         cout << minDistPath[i] << " ";
     }
-
-
+    cout << endl;
 
     return 0;
 }
