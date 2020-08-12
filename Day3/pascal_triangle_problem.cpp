@@ -3,19 +3,16 @@ using namespace std;
 typedef unsigned long long ull;
 
 /*
- * Build Pascal Triangle output number of combinations C(n, k)
+ * Build Pascal Triangle of N rows and output Q numbers of combinations C(n, k) 
  *
- * Input: n, k
- * Output: Pascal Triangle, C(n, k)
+ * Input: N - number of rows, Q - number of queries, Q rows of (n, k)
+ * Output: Pascal Triangle, Q rows of C(n, k)
  */
 
-ull get_combinations_build_pascal_triangle(const ull n, const ull k) {
-    if (k > n)
-        return 0ll;
+ull** get_and_build_pascal_triangle(const int n) {
+    ull** C = new ull*[n + 1];
 
-    ull** C = new ull*[n + 1]; // answer will be in C[n][k] cell
-
-    for (ull i = 0; i <= n; i++)
+    for (int i = 0; i <= n; i++)
     {
         C[i] = new ull[i + 1];
         C[i][0] = 1;
@@ -24,31 +21,52 @@ ull get_combinations_build_pascal_triangle(const ull n, const ull k) {
         if (i < 2)
             continue;
 
-        for (ull j = 1; j < i; ++j) {
+        for (int j = 1; j < i; ++j) {
             C[i][j] = C[i - 1][j - 1] + C[i - 1][j];
         }
     }
 
     cout << endl << "Pascal Triangle:" << endl;
-    for (ull i = 0; i <= n; i++) {
-        for (ull j = 0; j <= i; ++j) {
+    for (int i = 0; i <= n; i++) {
+        cout << i << ": ";
+        for (int j = 0; j <= i; ++j) {
             cout << C[i][j] << " ";
         }
         cout << endl;
     }
+    cout << endl;
 
-    return C[n][k];
+    return C;
 }
 
 int main()
 {
-    ull n, k; cin >> n >> k;
-    ull C = get_combinations_build_pascal_triangle(n, k);
+    int N; cin >> N;
 
-    if (C == 0)
+    if (N < 0) {
         cout << endl << "incorrect input" << endl;
-    else
-        cout << endl << "Answer: " << C << endl;
+        return 0;
+    }
+
+    ull** C = get_and_build_pascal_triangle(N);
+
+    int Q; cin >> Q;
+
+     if (Q < 0) {
+        cout << endl << "incorrect input" << endl;
+        return 0;
+    }
+
+    for (int i = 0; i < Q; ++i) {
+        int n, k; cin >> n >> k;
+
+        if (k < 0 || n < 0 || n < k) {
+            cout << endl << "incorrect input" << endl;
+            return 0;
+        }
+
+        cout << "\t" << C[n][k] << endl;
+    }
 
     return 0;
 }
