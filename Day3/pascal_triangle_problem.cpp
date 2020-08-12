@@ -42,25 +42,13 @@ ull** get_and_build_pascal_triangle(const int n) {
 int main()
 {
     int N; cin >> N;
-
-    if (N < 0) {
-        cout << endl << "incorrect input" << endl;
-        return 0;
-    }
-
     ull** C = get_and_build_pascal_triangle(N);
 
     int Q; cin >> Q;
-
-     if (Q < 0) {
-        cout << endl << "incorrect input" << endl;
-        return 0;
-    }
-
     for (int i = 0; i < Q; ++i) {
         int n, k; cin >> n >> k;
 
-        if (k < 0 || n < 0 || n < k) {
+        if (k < 0 || n < 0 || n < k || n > N) {
             cout << endl << "incorrect input" << endl;
             return 0;
         }
