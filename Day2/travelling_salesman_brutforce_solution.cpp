@@ -33,7 +33,7 @@ pair<int, int*> get_min_dist(int size, int** const dists, int start) {
     currentPath[0] = start; // the first vertex is the start vertex
     currentPath[lengthOfPath - 1] = start; // the last vertex is the start vertex
     
-    // Filling array 'currentOrderInPath' by some sorted permutation (perm only of elems with indices: from 1 to lengthOfPath - 1)
+    // Filling array 'currentOrderInPath' by some sorted permutation (perm only of elems with indices: from 1 to lengthOfPath - 2)
     // It must be sorted to get all perms by next_perm func from STL, f.e. {2, (0, 1, 3, 4,) 2} where '2' is start point
     for (int i = 1; i < lengthOfPath - 1; ++i) {
         if (i <= start)
@@ -48,7 +48,7 @@ pair<int, int*> get_min_dist(int size, int** const dists, int start) {
 
          // 'lengthOfPath- 1' cause of ( number of roads(dists) == number of towns(length of path) - 1 )
         for (int i = 0; i < lengthOfPath - 1; ++i) {
-            currentDist += dists[currentPath[i]][currentPath[i + 1]]; // distance beetwen [i]-town and [i+1]-town
+            currentDist += dists[currentPath[i]][currentPath[i + 1]]; // distance between [i]-town and [i+1]-town
         }
 
         if (currentDist < minDist) 
